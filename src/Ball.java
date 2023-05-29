@@ -1,9 +1,16 @@
 import java.awt.*;
+import java.io.PrintStream;
+import java.util.Timer;
 
 public class Ball extends DisplayObject {
-    private int radius;
-    private int speed;
+    public int radius;
+    public int speed;
     private float direction;
+    private float dx;
+    private float dy;
+    private boolean fromWall;
+    private static boolean flag;
+
 
     public Ball (int x, int y, int radius, int speed, float direction, Color color, boolean isMoving) {
         this.type = Type.BALL;
@@ -13,70 +20,92 @@ public class Ball extends DisplayObject {
         this.direction = direction;
         this.isMoving = isMoving;
         this.isVisible = true;
-        this.x1 = (x - radius);
-        this.x2 = (x + radius);
-        this.y1 = (y - radius);
-        this.y2 = (y + radius);
+        this.x1 = x;
+        this.x2 = x + 2 * radius;
+        this.y1 = y;
+        this.y2 = y + 2 * radius;
     }
 
     @Override
-    public void move() throws InterruptedException {
-        if (x1 <= 0)
-        {
+    public void move() {
+        if (x1 <= 0) {
             direction = (float)(Math.PI) - direction;
         } else {
-            if (x2 >= Game.WIDTH)
-            {
+            if (x2 >= Game.WIDTH) {
                 direction = (float)(Math.PI) - direction;
             }
             else {
-                if (y1 <= 35)
-                {
+                if (y1 <= 35) {
                     direction = -direction;
                 }
             }
         }
 
-        float dx = (float) Math.cos(direction) * speed;
-        float dy = (float) Math.sin(direction) * speed;
+        dx = (float) Math.cos(direction) * speed;
+        dy = (float) Math.sin(direction) * speed;
         x1 = x1 + (int)dx;
         x2 = x2 + (int)dx;
         y1 = y1 + (int)dy;
         y2 = y2 + (int)dy;
 
-        boolean flag = false;
+        fromWall = false;
         if (x1 >= Game.WIDTH - 2 * radius) {
             x1 = Game.WIDTH - 2 * radius;
             x2 = Game.WIDTH;
-            flag = true;
+            fromWall = true;
         }
         if (x1 <= 0) {
             x1 = 0;
             x2 = 2 * radius;
-            flag = true;
+            fromWall = true;
         }
         if (y1 <= 35) {
             y1 = 35;
             y2 = 35 + 2 * radius;
-            flag = true;
+            fromWall = true;
         }
-        if (y1 >= 800) {
+        if (y1 >= Game.HEIGHT) {
             Game.player.fail();
         }
-        if (flag) {
+        if (fromWall) {
+            System.out.println("WALL");
+            flag = fromWall;
             Audio.playSoundThread(Audio.WALL_SOUND);
         }
+
         /*System.out.println("dx = " + dx + " " + "dy = " + dy);
         System.out.println("x1 = " + x1 + " " + "y1 = " + y1 + " " + "x2 = " + x2 + " " + "y2 = " + y2);
         System.out.println();*/
     }
 
     public void changeDirection(DisplayObject object) {
-        if (y1 >= object.y2 || y2 <= object.y1) {
+        if ((y2 >= object.y1) && (y1 < object.y1) && (y2 < object.y2) && ((x2 >= object.x1) && (x1 <= object.x2)) && (dy > 0)) {
+            System.out.flush();
+            System.out.println("Top");
+            System.out.flush();
+            y2 = object.y1;
+            y1 = y2 - 2 * radius;
             direction = -direction;
-        } else {
+        } else if ((y1 <= object.y2) && (y2 > object.y2) && (((x2 >= object.x1) && (x1 <= object.x2)) && (dy < 0))) {
+            System.out.flush();
+            System.out.println("Bottom");
+            y1 = object.y2;
+            y2 = y1 + 2 * radius;
+            direction = - direction;
+        } else if ((x1 <= object.x2) && (x1 > object.x1) && ((y2 >= object.y1) && (y1 <= object.y2)) && (dx < 0)){
+            System.out.flush();
+            System.out.println("right");
+            x1 = object.x2;
+            x2 = x1 + 2 * radius;
+            direction = (float) Math.PI - direction;
+        } else if ((x2 >= object.x1) && (y2 < object.y2) && ((y2 >= object.y1) || (y1 <= object.y2)) && (dx > 0)) {
+            System.out.flush();
+            System.out.println("left");
+            x2 = object.x1;
+            x1 = x2 - 2 * radius;
             direction = (float) Math.PI - direction;
         }
+
         if (object.type == Type.BRICK) {
             ((Brick)object).decreaseStrength();
             Player.statistics.score += 10;

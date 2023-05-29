@@ -11,7 +11,7 @@ public class DisplayAll {
         displayObjects.addAll(bricks.bricks);
     }
 
-    public void moveObjects() throws InterruptedException {
+    public void moveObjects() {
         for (DisplayObject object : displayObjects) {
             if (object.isMoving && object.isVisible) {
                 object.move();
@@ -27,7 +27,7 @@ public class DisplayAll {
         }
     }
 
-    public void checkCollisions() {
+    public void checkCollisions() throws InterruptedException {
         for (DisplayObject object1 : displayObjects) {
             if (object1.isMoving && object1.isVisible) {
                 for (DisplayObject object2 : displayObjects) {

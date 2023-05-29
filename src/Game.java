@@ -7,12 +7,13 @@ import java.util.TimerTask;
 
 public class Game extends JPanel {
     public static Player player;
+
     public static Game game;
     public static GameField gameField;
     public static long delay = 6;
     public static boolean isPaused;
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 650;
+    public static int WIDTH = 1920;
+    public static int HEIGHT = 1080;
     public static Timer timer;
     public static JFrame frame;
     public static TableRecords tableRecords;
@@ -66,9 +67,9 @@ public class Game extends JPanel {
         @Override
         public void run() {
             if (!isPaused) {
-                gameField.allObjects.checkCollisions();
+                gameField.allObjects.moveObjects();
                 try {
-                    gameField.allObjects.moveObjects();
+                    gameField.allObjects.checkCollisions();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -125,6 +126,7 @@ public class Game extends JPanel {
 
     public void start() {
         frame = new JFrame("Арканоид");
+        frame.setUndecorated(true);
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(new Color(11, 22, 26));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

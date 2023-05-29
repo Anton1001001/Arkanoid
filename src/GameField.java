@@ -7,8 +7,8 @@ public class GameField {
     public Menu menu;
     public Settings settings;
     public GameField() {
-        balls = new Balls();
         platforms = new Platforms();
+        balls = new Balls();
         bricks = new Bricks();
         menu = new Menu();
         settings = new Settings();

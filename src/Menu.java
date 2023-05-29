@@ -11,7 +11,6 @@ public class Menu extends JFrame{
         menuPanel = new JPanel();
         menuPanel.setLayout(new GridBagLayout());
         menuPanel.setOpaque(false);
-        //menuPanel.setBackground(Color.RED);
 
         JButton resumeGameButton = new JButton("Продолжить игру");
         JButton newGameButton = new JButton("Новая игра");

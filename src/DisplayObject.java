@@ -10,7 +10,7 @@ public abstract class DisplayObject {
     public boolean isMoving;
     Type type;
 
-    public abstract void move() throws InterruptedException;
+    public abstract void move();
     public abstract void draw(Graphics g);
 
     public boolean checkCollisions(DisplayObject object) {

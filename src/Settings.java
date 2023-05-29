@@ -5,9 +5,11 @@ import java.awt.event.*;
 public class Settings extends JFrame{
     public JPanel settingsPanel;
     public static final String[] COMPLEXITY_LABELS = {"Легко", "Легко+", "Средне", "Средне+", "Сложно"};
-    public static final String[] SCREEN_RESOLUTION_LABELS = {"800x600", "1200x800", "1366x768", "1200x600", "FullScreen"};
+    public static final String[] SCREEN_RESOLUTION_LABELS = { "FullScreen", "800x600", "1200x800", "1366x768", "1200x600"};
     private static int currentIndexComplexityLabels = 0;
     private static int currentIndexScreenResolutionLabels = 0;
+    public static int previousHeight = Game.HEIGHT;
+    public static int previousWidth = Game.WIDTH;
     public Settings() {
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new GridBagLayout());
@@ -22,11 +24,11 @@ public class Settings extends JFrame{
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        complexityButton.setPreferredSize(new Dimension(200, 40));
+        complexityButton.setPreferredSize(new Dimension(300, 40));
         complexityButton.setHorizontalAlignment(SwingConstants.CENTER);
-        backToMenuButton.setPreferredSize(new Dimension(200, 40));
+        backToMenuButton.setPreferredSize(new Dimension(300, 40));
         backToMenuButton.setHorizontalAlignment(SwingConstants.CENTER);
-        screenResolutionButton.setPreferredSize(new Dimension(200, 40));
+        screenResolutionButton.setPreferredSize(new Dimension(300, 40));
         screenResolutionButton.setHorizontalAlignment(SwingConstants.CENTER);
 
         settingsPanel.add(complexityButton, gbc);
@@ -93,21 +95,58 @@ public class Settings extends JFrame{
                 screenResolutionButton.setText(SCREEN_RESOLUTION_LABELS[currentIndexScreenResolutionLabels]);
                 switch (screenResolutionButton.getText()) {
                     case "800x600" :
-                        //Iliya pidor
+                        Game.WIDTH = 800;
+                        Game.HEIGHT = 600;
+                        //Balls.balls.get(0).speed = 2;
+                        //Platforms.platforms.get(0).speed = 2;
+                        Game.frame.dispose();
+                        Game.frame.setUndecorated(false);
                         break;
                     case "1200x800":
-                        //Pososi
+                        Game.WIDTH = 1200;
+                        Game.HEIGHT = 800;
+                        //Balls.balls.get(0).speed = 2;
+                        //Platforms.platforms.get(0).speed = 2;
+                        Game.frame.dispose();
+                        Game.frame.setUndecorated(false);
                         break;
                     case "1366x768" :
-                        //Iliya
+                        Game.WIDTH = 1366;
+                        Game.HEIGHT = 768;
+                        //Balls.balls.get(0).speed = 2;
+                        //Platforms.platforms.get(0).speed = 2;
+                        Game.frame.dispose();
+                        Game.frame.setUndecorated(false);
                         break;
                     case "1200x600" :
-                        //Iliya kotik
+                        Game.WIDTH = 1200;
+                        Game.HEIGHT = 600;
+                        //Balls.balls.get(0).speed = 2;
+                        //Platforms.platforms.get(0).speed = 3;
+                        Game.frame.dispose();
+                        Game.frame.setUndecorated(false);
                         break;
                     case "FullScreen" :
-                        // Ygr
+                        Game.WIDTH = 1920;
+                        Game.HEIGHT = 1080;
+                        //Balls.balls.get(0).speed = 3;
+                        //Platforms.platforms.get(0).speed = 3;
+                        Game.frame.dispose();
+                        Game.frame.setUndecorated(true);
                         break;
                 }
+
+                Game.game.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+                Game.frame.setResizable(false);
+
+                Game.frame.pack();
+                Game.frame.setLocationRelativeTo(null);
+                Game.frame.setVisible(true);
+                Bricks.repaintBricks();
+                Platforms.repaintPlatform();
+                Balls.repaintBall();
+                Game.frame.revalidate();
+                Game.frame.repaint();
                 settingsPanel.requestFocus();
             }
         });
