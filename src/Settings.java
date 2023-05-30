@@ -69,7 +69,7 @@ public class Settings extends JFrame{
                         speedRatio = 0.0121f;
                         break;
                     case "Сложно" :
-                        speedRatio = 0.016f;
+                        speedRatio = 0.017f;
                         break;
                 }
                 Balls.balls.get(0).speed = (int)(Game.HEIGHT * speedRatio);

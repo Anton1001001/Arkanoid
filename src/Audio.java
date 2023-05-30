@@ -4,10 +4,12 @@ import java.io.IOException;
 
 public class Audio {
     public static final File BRICK_SOUND = new File("Audio/Brick.wav");
+    public static final File BONUS_SOUND = new File("Audio/Bonus.wav");
     public static final File WALL_SOUND = new File("Audio/Wall.wav");
     public static final File PLATFORM_SOUND = new File("Audio/Platform.wav");
     public static final File CHOICE_SOUND = new File("Audio/Choice.wav");
     public static final File CLICK_SOUND = new File("Audio/Click.wav");
+    public static final File DAMAGE_SOUND = new File("Audio/Damage.wav");
     public static void playSound(File soundFile) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);

@@ -1,16 +1,22 @@
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Serializable;
 
-public class Brick extends DisplayObject{
+public class Brick extends DisplayObject implements Serializable {
     public int strength;
     public Bonuses bonuses;
 
-    public Brick (int x1, int y1,  int x2, int y2, int strength, Color color, boolean isMoving) {
+    public Brick (int x1, int y1,  int x2, int y2, int strength, int R, int G, int B, boolean isMoving) {
         this.type = Type.BRICK;
         this.x1 = x1;
         this.x2 = x2;
         this.y1 = y1;
         this.y2 = y2;
-        this.color = color;
+        this.R = R;
+        this.G = G;
+        this.B = B;
         this.strength = strength;
         this.isMoving = isMoving;
         this.isVisible = true;
@@ -19,9 +25,34 @@ public class Brick extends DisplayObject{
     public void move() {
 
     }
+
+    @Override
+    public void saveComponentData(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            writer.println(getClass().getName());
+            writer.println(x1 + "," + y1 + "," + x2 + "," + y2 + "," + strength + "," + R + "," + G + "," + B + "," + isVisible);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void readComponentData(String dataComponent) {
+        String[] dataArray = dataComponent.split(",");
+        this.x1 = Integer.parseInt(dataArray[0]);
+        this.y1 = Integer.parseInt(dataArray[1]);
+        this.x2 = Integer.parseInt(dataArray[2]);
+        this.y2 = Integer.parseInt(dataArray[3]);
+        this.strength = Integer.parseInt(dataArray[4]);
+        this.R = Integer.parseInt(dataArray[5]);
+        this.G = Integer.parseInt(dataArray[6]);
+        this.B = Integer.parseInt(dataArray[7]);
+        this.isVisible = Boolean.parseBoolean(dataArray[8]);
+    }
+
     @Override
     public void draw(Graphics g) {
-        g.setColor(color);
+        g.setColor(new Color(R, G, B));
         g.fillRect(x1, y1, x2 - x1, y2 - y1);
         g.setColor(Color.BLACK);
         g.drawRect(x1, y1, x2 - x1, y2 - y1);
@@ -30,13 +61,31 @@ public class Brick extends DisplayObject{
     public void decreaseStrength()
     {
         strength -= 1;
-        if (strength == 1)
-        {
-            this.color = new Color(203,83,129);
-        }
-        else if(strength == 0)
-        {
-            this.isVisible = false;
+        switch (strength) {
+            case 4 :
+                this.R = 68;
+                this.G = 7;
+                this.B = 77;
+                break;
+            case 3 :
+                this.R = 96;
+                this.G = 41;
+                this.B = 96;
+                break;
+            case 2 :
+                this.R = 146;
+                this.G = 91;
+                this.B = 148;
+                break;
+            case 1 :
+                this.R = 194;
+                this.G = 142;
+                this.B = 200;
+                break;
+            case 0 :
+                this.isVisible = false;
+                bonuses.bonuses.get(Ball.destroyedBrick).isMoving = true;
+                bonuses.bonuses.get(Ball.destroyedBrick).isVisible = true;
         }
     }
 }

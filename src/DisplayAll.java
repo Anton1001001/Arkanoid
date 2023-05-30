@@ -3,12 +3,13 @@ import java.util.*;
 import java.util.List;
 
 public class DisplayAll {
-    public List<DisplayObject> displayObjects;
-    public DisplayAll(Balls balls, Platforms platforms, Bricks bricks) {
+    public static List<DisplayObject> displayObjects;
+    public DisplayAll(Balls balls, Platforms platforms, Bricks bricks, Bonuses bonuses) {
         displayObjects = new ArrayList<>();
         displayObjects.addAll(balls.balls);
         displayObjects.addAll(platforms.platforms);
         displayObjects.addAll(bricks.bricks);
+        displayObjects.addAll(bonuses.bonuses);
     }
 
     public void moveObjects() {
@@ -36,8 +37,19 @@ public class DisplayAll {
                     }
                     if (object1.checkCollisions(object2)) {
                         if (object1.type == Type.BALL) {
-                        ((Ball) object1).changeDirection(object2);
-                            }
+                            ((Ball) object1).changeDirection(object2);
+                        }
+                        if (object1.type == Type.PLATFORM && object2.type == Type.BONUS) {
+                            object2.isVisible = false;
+                            object2.isMoving = false;
+                            int num = ((Bonus)object2).num;
+                            if (num > 0)
+                                Audio.playSoundThread(Audio.BONUS_SOUND);
+                            else
+                                Audio.playSoundThread(Audio.DAMAGE_SOUND);
+                            Player.statistics.score += num;
+                            TableRecords.update();
+                        }
                         break;
                     }
                 }

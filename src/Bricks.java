@@ -10,11 +10,11 @@ public class Bricks {
         int Height = Game.HEIGHT;
         bricks = new ArrayList<>();
         for (int i = 1; i < 10; i++) {
-            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.15), (i + 1) * (Width / 11), (int) (Height * 0.18), 1, new Color(203,83,129), false));
-            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.18), (i + 1) * (Width / 11), (int) (Height * 0.21), 2, new Color(214,103,50), false));
-            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.21), (i + 1) * (Width / 11), (int) (Height * 0.24), 1, new Color(203,83,129), false));
-            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.24), (i + 1) * (Width / 11), (int) (Height * 0.27), 2, new Color(214,103,50), false));
-            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.27), (i + 1) * (Width / 11), (int) (Height * 0.3), 1, new Color(203,83,129), false));
+            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.15), (i + 1) * (Width / 11), (int) (Height * 0.18), 5,45,0,45,false));
+            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.18), (i + 1) * (Width / 11), (int) (Height * 0.21), 4,68,7,77,false));
+            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.21), (i + 1) * (Width / 11), (int) (Height * 0.24), 3,96, 41, 96,false));
+            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.24), (i + 1) * (Width / 11), (int) (Height * 0.27), 2,146,91,148,false));
+            bricks.add(new Brick(i * (Width / 11), (int) (Height * 0.27), (i + 1) * (Width / 11), (int) (Height * 0.3), 1,194,142,200,false));
        }
     }
 
@@ -33,5 +33,3 @@ public class Bricks {
         }
     }
 }
-//new Color(203,83,129) - розовый
-//new Color(214,103,50)

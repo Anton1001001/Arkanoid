@@ -56,7 +56,7 @@ public class Game extends JPanel {
         });
     }
 
-    public void startTimer() {
+    public synchronized void startTimer() {
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new GameTask(), 2000, delay);
@@ -104,7 +104,8 @@ public class Game extends JPanel {
     }
 
     public static void save() {
-        // Код сохранения игры
+        Proxy proxy = new Proxy();
+        proxy.serializeToTextFile("Proxy/save.txt", gameField.allObjects.displayObjects, gameField.settings, player);
     }
 
     public static void loadJSON() {
@@ -112,6 +113,11 @@ public class Game extends JPanel {
     }
 
     public static void loadTXT() {
+        if (gameField == null)
+            gameField = new GameField();
+        Proxy proxy = new Proxy();
+        proxy.deserializeFromTextFile("Proxy/save.txt",gameField.allObjects, gameField.settings, player);
+        //Bricks.repaintBricks();
 
     }
 
@@ -120,7 +126,10 @@ public class Game extends JPanel {
         gameField.platforms = new Platforms();
         gameField.balls = new Balls();
         gameField.bricks = new Bricks();
-        gameField.allObjects = new DisplayAll(gameField.balls, gameField.platforms, gameField.bricks);
+        gameField.bonuses = new Bonuses();
+        gameField.allObjects = new DisplayAll(gameField.balls, gameField.platforms, gameField.bricks, gameField.bonuses);
+        frame.revalidate();
+        frame.repaint();
         TableRecords.update();
     }
 
@@ -128,7 +137,7 @@ public class Game extends JPanel {
         frame = new JFrame("Арканоид");
         frame.setUndecorated(true);
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(new Color(11, 22, 26));
+        setBackground(Color.BLACK);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(this);
@@ -141,6 +150,7 @@ public class Game extends JPanel {
         gameField.menu.menuPanel.setVisible(false);
         frame.setVisible(true);
         setFocusable(true);
+        requestFocusInWindow();
     }
 
     public static void main(String[] args) {
@@ -148,6 +158,9 @@ public class Game extends JPanel {
         game.start();
         game.startTimer();
 
+
     }
 
 }
+
+//new Color(11, 22, 26)

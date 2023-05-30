@@ -1,21 +1,23 @@
 import java.awt.*;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Timer;
 
-public class Ball extends DisplayObject {
+public class Ball extends DisplayObject implements Serializable {
     public int radius;
     public int speed;
     private float direction;
     private float dx;
     private float dy;
+    public static int destroyedBrick;
     private boolean fromWall;
-    private static boolean flag;
 
 
-    public Ball (int x, int y, int radius, int speed, float direction, Color color, boolean isMoving) {
+    public Ball (int x, int y, int radius, int speed, float direction, int R, int G, int B, boolean isMoving) {
         this.type = Type.BALL;
         this.radius = radius;
-        this.color = color;
+        this.R = R;
+        this.G = G;
+        this.B = B;
         this.speed = speed;
         this.direction = direction;
         this.isMoving = isMoving;
@@ -68,8 +70,6 @@ public class Ball extends DisplayObject {
             Game.player.fail();
         }
         if (fromWall) {
-            System.out.println("WALL");
-            flag = fromWall;
             Audio.playSoundThread(Audio.WALL_SOUND);
         }
 
@@ -78,47 +78,65 @@ public class Ball extends DisplayObject {
         System.out.println();*/
     }
 
-    public void changeDirection(DisplayObject object) {
-        if ((y2 >= object.y1) && (y1 < object.y1) && (y2 < object.y2) && ((x2 >= object.x1) && (x1 <= object.x2)) && (dy > 0)) {
-            System.out.flush();
-            System.out.println("Top");
-            System.out.flush();
-            y2 = object.y1;
-            y1 = y2 - 2 * radius;
-            direction = -direction;
-        } else if ((y1 <= object.y2) && (y2 > object.y2) && (((x2 >= object.x1) && (x1 <= object.x2)) && (dy < 0))) {
-            System.out.flush();
-            System.out.println("Bottom");
-            y1 = object.y2;
-            y2 = y1 + 2 * radius;
-            direction = - direction;
-        } else if ((x1 <= object.x2) && (x1 > object.x1) && ((y2 >= object.y1) && (y1 <= object.y2)) && (dx < 0)){
-            System.out.flush();
-            System.out.println("right");
-            x1 = object.x2;
-            x2 = x1 + 2 * radius;
-            direction = (float) Math.PI - direction;
-        } else if ((x2 >= object.x1) && (y2 < object.y2) && ((y2 >= object.y1) || (y1 <= object.y2)) && (dx > 0)) {
-            System.out.flush();
-            System.out.println("left");
-            x2 = object.x1;
-            x1 = x2 - 2 * radius;
-            direction = (float) Math.PI - direction;
+    @Override
+    public void saveComponentData(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            writer.println(getClass().getName());
+            writer.println(x1 + "," + y1 + "," + radius + "," + speed + "," + direction + "," + R + "," + G + "," + B);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        if (object.type == Type.BRICK) {
-            ((Brick)object).decreaseStrength();
-            Player.statistics.score += 10;
-            TableRecords.update();
-            Audio.playSoundThread(Audio.BRICK_SOUND);
-        } else if (object.type == Type.PLATFORM) {
-            Audio.playSoundThread(Audio.PLATFORM_SOUND);
+    @Override
+    public void readComponentData(String dataComponent) {
+        String dataArray[] = dataComponent.split(",");
+        this.x1 = Integer.parseInt(dataArray[0]);
+        this.y1 = Integer.parseInt(dataArray[1]);
+        this.radius = Integer.parseInt(dataArray[2]);
+        this.speed = Integer.parseInt(dataArray[3]);
+        this.direction = Float.parseFloat(dataArray[4]);
+        this.R = Integer.parseInt(dataArray[5]);
+        this.G = Integer.parseInt(dataArray[6]);
+        this.B = Integer.parseInt(dataArray[7]);
+    }
+
+    public void changeDirection(DisplayObject object) {
+        if (object.type != Type.BONUS) {
+            if ((y2 >= object.y1) && (y1 < object.y1) && (y2 < object.y2) && ((x2 >= object.x1) && (x1 <= object.x2)) && (dy > 0)) {
+                y2 = object.y1;
+                y1 = y2 - 2 * radius;
+                direction = -direction;
+            } else if ((y1 <= object.y2) && (y2 > object.y2) && (((x2 >= object.x1) && (x1 <= object.x2)) && (dy < 0))) {
+                y1 = object.y2;
+                y2 = y1 + 2 * radius;
+                direction = -direction;
+            } else if ((x1 <= object.x2) && (x1 > object.x1) && ((y2 >= object.y1) && (y1 <= object.y2)) && (dx < 0)) {
+                x1 = object.x2;
+                x2 = x1 + 2 * radius;
+                direction = (float) Math.PI - direction;
+            } else if ((x2 >= object.x1) && (y2 < object.y2) && ((y2 >= object.y1) || (y1 <= object.y2)) && (dx > 0)) {
+                System.out.flush();
+                x2 = object.x1;
+                x1 = x2 - 2 * radius;
+                direction = (float) Math.PI - direction;
+            }
+
+            if (object.type == Type.BRICK) {
+                destroyedBrick = Bricks.bricks.indexOf(object);
+                ((Brick) object).decreaseStrength();
+                Player.statistics.score += 10;
+                TableRecords.update();
+                Audio.playSoundThread(Audio.BRICK_SOUND);
+            } else if (object.type == Type.PLATFORM) {
+                Audio.playSoundThread(Audio.PLATFORM_SOUND);
+            }
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(color);
+        g.setColor(new Color(R, G, B));
         g.fillOval(x1, y1, 2 * radius, 2 * radius);
         g.setColor(Color.BLACK);
         g.drawOval(x1, y1, 2 * radius, 2 * radius);

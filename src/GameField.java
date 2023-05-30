@@ -4,6 +4,7 @@ public class GameField {
     public Balls balls;
     public Platforms platforms;
     public Bricks bricks;
+    public Bonuses bonuses;
     public Menu menu;
     public Settings settings;
     public GameField() {
@@ -11,8 +12,9 @@ public class GameField {
         platforms = new Platforms();
         balls = new Balls();
         bricks = new Bricks();
+        bonuses = new Bonuses();
         menu = new Menu();
 
-        allObjects = new DisplayAll(balls, platforms, bricks);
+        allObjects = new DisplayAll(balls, platforms, bricks, bonuses);
     }
 }

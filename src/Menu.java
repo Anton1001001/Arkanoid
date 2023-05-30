@@ -33,7 +33,7 @@ public class Menu extends JFrame{
         menuItems.add(loadGameButtonTXT);
         menuItems.add(settingsButton);
         menuItems.add(exitButton);
-        
+
         repaintMenu();
 
         newGameButton.addActionListener(new ActionListener() {
@@ -118,6 +118,10 @@ public class Menu extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 Game.loadTXT();
+                Game.frame.requestFocus();
+                Game.game.requestFocus();
+                Game.frame.revalidate();
+                Game.frame.repaint();
             }
         });
         loadGameButtonTXT.addMouseListener(new MouseAdapter() {

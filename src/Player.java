@@ -24,6 +24,7 @@ public class Player {
             Platforms platforms = new Platforms();
             Game.gameField.allObjects.displayObjects.set(0, balls.balls.get(0));
             Game.gameField.allObjects.displayObjects.set(1, platforms.platforms.get(0));
+            Bonuses.resetVisibility();
             Game.gameField.platforms = platforms;
             Game.gameField.balls = balls;
             isGameFailed = true;
