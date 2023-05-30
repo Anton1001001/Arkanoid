@@ -10,7 +10,7 @@ public class Game extends JPanel {
 
     public static Game game;
     public static GameField gameField;
-    public static long delay = 6;
+    public static long delay = 7;
     public static boolean isPaused;
     public static int WIDTH = 1920;
     public static int HEIGHT = 1080;

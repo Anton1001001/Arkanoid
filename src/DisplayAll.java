@@ -36,8 +36,8 @@ public class DisplayAll {
                     }
                     if (object1.checkCollisions(object2)) {
                         if (object1.type == Type.BALL) {
-                            ((Ball) object1).changeDirection(object2);
-                        }
+                        ((Ball) object1).changeDirection(object2);
+                            }
                         break;
                     }
                 }

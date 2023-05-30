@@ -5,12 +5,18 @@ import java.util.ArrayList;
 
 public class Menu extends JFrame{
 
-    public JPanel menuPanel;
+    public static JPanel menuPanel;
+    public static int buttonWidth;
+    public static int buttonHeight;
+    public static ArrayList<JButton> menuItems;
     public Menu() {
-        ArrayList<JButton> menuItems = new ArrayList<>();
+        menuItems = new ArrayList<>();
         menuPanel = new JPanel();
         menuPanel.setLayout(new GridBagLayout());
         menuPanel.setOpaque(false);
+
+        buttonWidth = (int)(Game.WIDTH * 0.375);
+        buttonHeight = (int)(Game.HEIGHT * 0.06667);
 
         JButton resumeGameButton = new JButton("Продолжить игру");
         JButton newGameButton = new JButton("Новая игра");
@@ -27,23 +33,13 @@ public class Menu extends JFrame{
         menuItems.add(loadGameButtonTXT);
         menuItems.add(settingsButton);
         menuItems.add(exitButton);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 0, 10, 0); // Отступы между кнопками
-
-        for (int i = 0; i < menuItems.size(); i++) {
-            JButton menuItem = menuItems.get(i);
-            menuItem.setPreferredSize(new Dimension(300, 40)); // Задать размер кнопки
-            menuItem.setHorizontalAlignment(SwingConstants.CENTER); // Выравнивание текста по центру
-            menuPanel.add(menuItem, gbc);
-            gbc.gridy++;
-        }
+        
+        repaintMenu();
 
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Audio.playSoundThread(Audio.CLICK_SOUND);
                 Game.newGame();
                 Game.resume();
                 dispose();
@@ -174,5 +170,22 @@ public class Menu extends JFrame{
                 Audio.playSoundThread(Audio.CLICK_SOUND);
             }
         });
+    }
+
+    public static void repaintMenu() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 0, 10, 0); // Отступы между кнопками
+
+        for (int i = 0; i < menuItems.size(); i++) {
+            JButton menuItem = menuItems.get(i);
+            buttonWidth = (int)(Game.WIDTH * 0.375);
+            buttonHeight = (int)(Game.HEIGHT * 0.06667);
+            menuItem.setPreferredSize(new Dimension(buttonWidth, buttonHeight)); // Задать размер кнопки
+            menuItem.setHorizontalAlignment(SwingConstants.CENTER); // Выравнивание текста по центру
+            menuPanel.add(menuItem, gbc);
+            gbc.gridy++;
+        }
     }
 }
