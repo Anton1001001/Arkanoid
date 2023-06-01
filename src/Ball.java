@@ -1,18 +1,21 @@
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.awt.*;
 import java.io.*;
 import java.util.Timer;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ball extends DisplayObject implements Serializable {
     public int radius;
     public int speed;
-    private float direction;
-    private float dx;
-    private float dy;
+    public float direction;
+    public float dx;
+    public float dy;
     public static int destroyedBrick;
-    private boolean fromWall;
-
-
+    public boolean fromWall;
     public Ball (int x, int y, int radius, int speed, float direction, int R, int G, int B, boolean isMoving) {
+        this.classType = 1;
         this.type = Type.BALL;
         this.radius = radius;
         this.R = R;
@@ -26,6 +29,10 @@ public class Ball extends DisplayObject implements Serializable {
         this.x2 = x + 2 * radius;
         this.y1 = y;
         this.y2 = y + 2 * radius;
+    }
+
+    public Ball() {
+
     }
 
     @Override
@@ -72,17 +79,13 @@ public class Ball extends DisplayObject implements Serializable {
         if (fromWall) {
             Audio.playSoundThread(Audio.WALL_SOUND);
         }
-
-        /*System.out.println("dx = " + dx + " " + "dy = " + dy);
-        System.out.println("x1 = " + x1 + " " + "y1 = " + y1 + " " + "x2 = " + x2 + " " + "y2 = " + y2);
-        System.out.println();*/
     }
 
     @Override
     public void saveComponentData(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             writer.println(getClass().getName());
-            writer.println(x1 + "," + y1 + "," + radius + "," + speed + "," + direction + "," + R + "," + G + "," + B);
+            writer.println(x1 + "," + y1 + "," + x2 + "," + y2 + "," + R + "," + G + "," + B + "," + speed + "," + radius + "," + direction);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,16 +93,19 @@ public class Ball extends DisplayObject implements Serializable {
 
     @Override
     public void readComponentData(String dataComponent) {
-        String dataArray[] = dataComponent.split(",");
+        String[] dataArray = dataComponent.split(",");
         this.x1 = Integer.parseInt(dataArray[0]);
         this.y1 = Integer.parseInt(dataArray[1]);
-        this.radius = Integer.parseInt(dataArray[2]);
-        this.speed = Integer.parseInt(dataArray[3]);
-        this.direction = Float.parseFloat(dataArray[4]);
-        this.R = Integer.parseInt(dataArray[5]);
-        this.G = Integer.parseInt(dataArray[6]);
-        this.B = Integer.parseInt(dataArray[7]);
+        this.x2 = Integer.parseInt(dataArray[2]);
+        this.y2 = Integer.parseInt(dataArray[3]);
+        this.R = Integer.parseInt(dataArray[4]);
+        this.G = Integer.parseInt(dataArray[5]);
+        this.B = Integer.parseInt(dataArray[6]);
+        this.speed = Integer.parseInt(dataArray[7]);
+        this.radius = Integer.parseInt(dataArray[8]);
+        this.direction = Float.parseFloat(dataArray[9]);
     }
+
 
     public void changeDirection(DisplayObject object) {
         if (object.type != Type.BONUS) {
@@ -142,4 +148,7 @@ public class Ball extends DisplayObject implements Serializable {
         g.drawOval(x1, y1, 2 * radius, 2 * radius);
     }
 
+
 }
+
+

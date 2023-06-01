@@ -18,6 +18,17 @@ public class Bricks {
        }
     }
 
+    public static boolean isWin() {
+        boolean result = true;
+        for (Brick brick : bricks) {
+            if (brick.isVisible) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
     public static void repaintBricks(){
         int Width = Game.WIDTH;
         int Height = Game.HEIGHT;

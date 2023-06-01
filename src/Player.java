@@ -1,6 +1,4 @@
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Timer;
+
 
 public class Player {
     public static Statistics statistics;
@@ -17,7 +15,9 @@ public class Player {
         statistics.lives--;
         TableRecords.update();
         if (statistics.lives <= 0) {
-            Game.pause();
+            Audio.playSoundThread(Audio.GAME_OVER);
+            MessageBox.showMessageBox("Вы проиграли!");
+            Game.timer.cancel();
         }
         else {
             Balls balls = new Balls();
@@ -31,6 +31,6 @@ public class Player {
         }
     }
     public static String getPlayerStatistic(){
-        return "        Name: " + statistics.name + "         Score: " + Integer.toString(statistics.score) + "         Lives: " + Integer.toString(statistics.lives);
+        return "         Уровень:  " + statistics.level + "        Имя игрока:  " + statistics.name + "         Счёт:  " + statistics.score + "         Жизни:  " + statistics.lives + "         Сложность:  " + statistics.complexity + "        ";
     }
 }

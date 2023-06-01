@@ -1,14 +1,20 @@
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Brick extends DisplayObject implements Serializable {
     public int strength;
-    public Bonuses bonuses;
+    public Brick() {
+
+    }
 
     public Brick (int x1, int y1,  int x2, int y2, int strength, int R, int G, int B, boolean isMoving) {
+        this.classType = 3;
         this.type = Type.BRICK;
         this.x1 = x1;
         this.x2 = x2;
@@ -84,8 +90,8 @@ public class Brick extends DisplayObject implements Serializable {
                 break;
             case 0 :
                 this.isVisible = false;
-                bonuses.bonuses.get(Ball.destroyedBrick).isMoving = true;
-                bonuses.bonuses.get(Ball.destroyedBrick).isVisible = true;
+                Bonuses.bonuses.get(Ball.destroyedBrick).isMoving = true;
+                Bonuses.bonuses.get(Ball.destroyedBrick).isVisible = true;
         }
     }
 }

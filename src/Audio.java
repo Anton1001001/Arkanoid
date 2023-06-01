@@ -10,6 +10,7 @@ public class Audio {
     public static final File CHOICE_SOUND = new File("Audio/Choice.wav");
     public static final File CLICK_SOUND = new File("Audio/Click.wav");
     public static final File DAMAGE_SOUND = new File("Audio/Damage.wav");
+    public static final File GAME_OVER = new File("Audio/GameOver.wav");
     public static void playSound(File soundFile) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);

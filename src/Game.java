@@ -19,9 +19,8 @@ public class Game extends JPanel {
     public static TableRecords tableRecords;
 
     public Game() {
-
-        player = new Player();
         gameField = new GameField();
+        player = new Player();
         isPaused = false;
 
 
@@ -56,7 +55,7 @@ public class Game extends JPanel {
         });
     }
 
-    public synchronized void startTimer() {
+    public void startTimer() {
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new GameTask(), 2000, delay);
@@ -68,11 +67,7 @@ public class Game extends JPanel {
         public void run() {
             if (!isPaused) {
                 gameField.allObjects.moveObjects();
-                try {
-                    gameField.allObjects.checkCollisions();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                gameField.allObjects.checkCollisions();
                 repaint();
             }
             if (Player.isGameFailed) {
@@ -106,19 +101,22 @@ public class Game extends JPanel {
     public static void save() {
         Proxy proxy = new Proxy();
         proxy.serializeToTextFile("Proxy/save.txt", gameField.allObjects.displayObjects, gameField.settings, player);
+        proxy.serializeToJSONFile("Proxy/save.json", gameField.allObjects.displayObjects, gameField.settings, player);
     }
 
     public static void loadJSON() {
-
+        Proxy proxy = new Proxy();
+        proxy.deserializeFromJSONFile("Proxy/save.json", gameField.allObjects, gameField.settings, player);
+        frame.revalidate();
+        game.revalidate();
+        frame.repaint();
     }
 
     public static void loadTXT() {
-        if (gameField == null)
-            gameField = new GameField();
         Proxy proxy = new Proxy();
-        proxy.deserializeFromTextFile("Proxy/save.txt",gameField.allObjects, gameField.settings, player);
-        //Bricks.repaintBricks();
-
+        proxy.deserializeFromTextFile("Proxy/save.txt", gameField.allObjects, gameField.settings, player);
+        frame.revalidate();
+        frame.repaint();
     }
 
     public static void newGame() {

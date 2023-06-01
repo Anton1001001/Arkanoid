@@ -1,16 +1,23 @@
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Platform extends DisplayObject implements Serializable {
     public int speed;
     public boolean moveLeft;
     public boolean moveRight;
+
+    public Platform() {
+
+    }
     public Platform(int x1, int y1, int x2, int y2, int R, int G, int B, int speed, boolean isMoving) {
-        type = Type.PLATFORM;
+        this.classType = 2;
+        this.type = Type.PLATFORM;
         this.x1 = x1;
         this.x2 = x2;
         this.y1 = y1;

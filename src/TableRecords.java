@@ -11,7 +11,7 @@ public class TableRecords extends JPanel {
 
     public TableRecords(){
         statistics = new JLabel(Player.getPlayerStatistic());
-        menuButton = new JButton("Menu");
+        menuButton = new JButton("Меню");
         add(statistics,BorderLayout.WEST);
         add(menuButton, BorderLayout.EAST);
         menuButton.addActionListener(new ActionListener() {

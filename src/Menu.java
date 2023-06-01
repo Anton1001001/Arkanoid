@@ -100,6 +100,9 @@ public class Menu extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 Game.loadJSON();
+                Game.frame.requestFocus();
+                Game.game.requestFocus();
+                Game.frame.repaint();
             }
         });
         loadGameButtonJSON.addMouseListener(new MouseAdapter() {
@@ -120,7 +123,6 @@ public class Menu extends JFrame{
                 Game.loadTXT();
                 Game.frame.requestFocus();
                 Game.game.requestFocus();
-                Game.frame.revalidate();
                 Game.frame.repaint();
             }
         });
@@ -142,8 +144,8 @@ public class Menu extends JFrame{
                 Audio.playSoundThread(Audio.CLICK_SOUND);
                 Game.gameField.menu.menuPanel.setVisible(false);
                 Game.game.remove(Game.gameField.menu.menuPanel);
-                Game.game.add(Game.gameField.settings.settingsPanel, BorderLayout.CENTER);
-                Game.gameField.settings.settingsPanel.requestFocus();
+                Game.game.add(SettingsComponents.settingsPanel, BorderLayout.CENTER);
+                SettingsComponents.settingsPanel.requestFocus();
                 Game.game.revalidate();
                 Game.game.repaint();
                 Game.frame.revalidate();
