@@ -36,7 +36,7 @@ public class Bonus extends DisplayObject{
         int probability = random.nextInt(15);
         if (probability == 0) {
             this.bonusType = 1;
-        } else if (probability == 13) {
+        } else if (probability == 1) {
             this.bonusType = 2;
         } else {
             this.bonusType = 3;

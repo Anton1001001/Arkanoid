@@ -11,8 +11,12 @@ import java.util.List;
 
 public class DisplayAll {
     public static List<DisplayObject> displayObjects;
-    public static boolean isExpanding;
-    private Timer timer;
+    private static boolean isX2 = false;
+    private static boolean isW;
+    private static boolean isX2Started = false;
+    private static boolean isWStarted = false;
+    private Timer timer1;
+    private Timer timer2;
     public DisplayAll(Balls balls, Platforms platforms, Bricks bricks, Bonuses bonuses) {
         displayObjects = new ArrayList<>();
         displayObjects.addAll(balls.balls);
@@ -37,7 +41,7 @@ public class DisplayAll {
         }
     }
 
-    public void checkCollisions() {
+    public void checkCollisions() throws InterruptedException {
         for (DisplayObject object1 : displayObjects) {
             if (object1.isMoving && object1.isVisible) {
                 for (DisplayObject object2 : displayObjects) {
@@ -51,57 +55,73 @@ public class DisplayAll {
                         if (object1.type == Type.PLATFORM && object2.type == Type.BONUS) {
                             object2.isVisible = false;
                             object2.isMoving = false;
+                            int width = (int) (Game.WIDTH / 11 + Game.WIDTH * 0.56 + Game.WIDTH / 22) - (int) (Game.WIDTH / 11 + Game.WIDTH * 0.5 - Game.WIDTH / 22);
                             int num = ((Bonus)object2).num;
                             if (((Bonus) object2).bonusType != 3 || ((Bonus) object2).bonusType == 3 && ((Bonus) object2).num > 0)
                                 Audio.playSoundThread(Audio.BONUS_SOUND);
                             else
                                 Audio.playSoundThread(Audio.DAMAGE_SOUND);
-                            if (((Bonus) object2).bonusType == 1) {
-                                int x1 = object1.x1;
-                                int x2 = object1.x2;
-                                int halfWidth = (x2 - x1) / 2;
-                                object1.x2 += halfWidth;
-                                object1.x1 -= halfWidth;
-                                isExpanding = true;
-                                timer = new Timer(5000, new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        object1.x2 -= halfWidth;
-                                        object1.x1 += halfWidth;
-                                        isExpanding = false;
-                                        timer.stop();
-                                    }
-                                });
-                                timer.setRepeats(false);
-                                timer.start();
-                                if (object1.x2 > Game.WIDTH) {
-                                    //isExpanding = true;
-                                    object1.x2 = Game.WIDTH;
-                                    object1.x1 = object1.x2 - 4 * halfWidth;
-
-                                }
-                            } else if (((Bonus) object2).bonusType == 2) {
-                                int width = object1.x2 - object1.x1;
-                                object1.x1 = 0;
-                                object1.x2 = Game.WIDTH;
-                                float speedRatio = Settings.speedRatio;
-                                Balls.balls.get(0).speed = (int) (Game.HEIGHT * 0.03f);
-                                timer = new Timer(5000, new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        if (Balls.balls.get(0).dx < 0) {
-                                            object1.x1 = Balls.balls.get(0).x1 - 10 * (Balls.balls.get(0).x2 - Balls.balls.get(0).x1);
-                                            object1.x2 = object1.x1 + width;
-                                        } else if (Balls.balls.get(0).dx > 0) {
-                                            object1.x1 = Balls.balls.get(0).x1 + 10 * (Balls.balls.get(0).x2 - Balls.balls.get(0).x1);
-                                            object1.x2 = object1.x1 + width;
+                            if (((Bonus) object2).bonusType == 1 && !isWStarted) {
+                                if (!isX2Started) {
+                                    isX2Started = true;
+                                    object1.x2 += width / 2;
+                                    object1.x1 -= width / 2;
+                                    timer1 = new Timer(4000, new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            object1.x2 -= width / 2;
+                                            object1.x1 += width / 2;
+                                            if (object1.x1 < 0) {
+                                                object1.x1 = 0;
+                                                object1.x2 = width;
+                                            }
+                                            isX2Started = false;
+                                            timer1.stop();
                                         }
-                                        Balls.balls.get(0).speed = (int) (Game.HEIGHT * speedRatio);
-                                        timer.stop();
-                                    }
-                                });
-                                timer.setRepeats(false);
-                                timer.start();
+
+                                    });
+                                    timer1.setRepeats(false);
+                                    timer1.start();
+                                } else {
+                                    timer1.restart();
+                                }
+
+                            } else if (((Bonus) object2).bonusType == 2) {
+                                if (!isWStarted) {
+
+                                    isWStarted = true;
+                                    object1.x1 = 0;
+                                    object1.x2 = Game.WIDTH;
+                                    float speedRatio = Settings.speedRatio;
+                                   // Balls.balls.get(0).speed = (int) (Game.HEIGHT * 0.03f);
+                                    timer2 = new Timer(4000, new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            if (Balls.balls.get(0).dx < 0) {
+                                                object1.x1 = Balls.balls.get(0).x1 - width;
+                                                object1.x2 = object1.x1 + width;
+                                                if (object1.x1 < 0) {
+                                                    object1.x1 = 0;
+                                                    object1.x2 = width;
+                                                }
+                                            } else if (Balls.balls.get(0).dx > 0) {
+                                                object1.x1 = Balls.balls.get(0).x1 + width;
+                                                object1.x2 = object1.x1 + width;
+                                                if (object1.x2 > Game.WIDTH) {
+                                                    object1.x2 = Game.WIDTH;
+                                                    object1.x1 = object1.x2 - width;
+                                                }
+                                            }
+                                            Balls.balls.get(0).speed = (int) (Game.HEIGHT * speedRatio);
+                                            isWStarted = false;
+                                            timer2.stop();
+
+                                        }
+                                    });
+                                    timer2.setRepeats(false);
+                                    timer2.start();
+                                } else
+                                    timer2.restart();
                             }
                             Player.statistics.score += num;
                             TableRecords.update();
@@ -112,10 +132,6 @@ public class DisplayAll {
             }
         }
     }
-
-
-
-
 
     public void readDataComponentFromJSON(JsonNode rootNode) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

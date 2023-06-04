@@ -67,7 +67,11 @@ public class Game extends JPanel {
         public void run() {
             if (!isPaused) {
                 gameField.allObjects.moveObjects();
-                gameField.allObjects.checkCollisions();
+                try {
+                    gameField.allObjects.checkCollisions();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 repaint();
             }
             if (Player.isGameFailed) {
